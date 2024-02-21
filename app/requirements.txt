@@ -1,4 +1,4 @@
 requests
 pymongo
 schedule
-pydantic_settings
+pydantic>=1.4.0,<2 
