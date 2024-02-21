@@ -1,3 +1,4 @@
 requests
 pymongo
 schedule
+pydantic_settings
