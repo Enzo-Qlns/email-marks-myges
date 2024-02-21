@@ -2,3 +2,4 @@ requests
 pymongo
 schedule
 pydantic>=1.4.0,<2 
+python-dotenv
