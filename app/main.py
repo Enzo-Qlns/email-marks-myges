@@ -51,7 +51,7 @@ def schedule_job():
         Marks.insert_one({"listGrades":objectToInsert, "created_at":datetime.now()})
 
 # Planifier l'exécution de la fonction toutes les 15 secondes
-schedule.every(5).seconds.do(schedule_job)
+schedule.every(15).seconds.do(schedule_job)
 
 while True:
     schedule.run_pending()
