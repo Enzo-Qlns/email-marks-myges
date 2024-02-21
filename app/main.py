@@ -6,7 +6,7 @@ from serializers.gradesSerializers import messageListEntity
 
 from config import settings
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import schedule
 import time
@@ -39,6 +39,12 @@ def schedule_job():
     if objectInserted != []:
         # Ajoute en base le nouvel object de note
         Marks.insert_one({"listGrades":objectToInsert, "created_at":datetime.now()})
+        
+        # Calcul de la date limite (1 heure plus tôt que maintenant)
+        date_limite = datetime.now() - timedelta(hours=1)
+
+        # Supprimer tous les documents de plus de 1h
+        Marks.delete_many({"created_at": {"$lt": date_limite}})
 
         # Compare l'object de note recupere de l'api et celui en base
         grade_updates = utils.compare_grades(objectInserted[0].get('listGrades'), objectToInsert)
