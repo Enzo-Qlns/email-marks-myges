@@ -16,14 +16,14 @@ class mail:
         self.smtp_username = settings.SMTP_USERNAME
         self.smtp_password = settings.SMTP_PASSWORD
 
-    def generate_notification_email(self, grade_updates):
+    def generate_notification_email(self, is_exam, grade_updates):
         email_content = """
             <!DOCTYPE html>
             <html lang="en">
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Notification de nouvelles notes</title>
+                <title>Notification de nouvelles notes""" + "(exam)" if is_exam is True else "" + """</title>
                 <style>
                     body {
                         font-family: Arial, sans-serif;
@@ -56,7 +56,7 @@ class mail:
             </head>
             <body>
                 <div class="container">
-                    <h2>Notification de nouvelles notes</h2>
+                    <h2>Notification de nouvelles notes""" + "(exam)" if is_exam is True else "" + """</h2>
                     <ul>
             """
 
@@ -76,7 +76,7 @@ class mail:
         """
         return email_content
 
-    def send_marks_email(self, to, grade_updates):
+    def send_marks_email(self, is_exam, to, grade_updates):
         msg = MIMEMultipart()
         msg['From'] = self.smtp_username
         msg['To'] = to
@@ -84,6 +84,7 @@ class mail:
         msg['Subject'] = "Nouvelle note"
 
         body = self.generate_notification_email(
+            is_exam=is_exam,
             grade_updates=grade_updates
         )
         msg.attach(MIMEText(body, 'html'))
