@@ -27,8 +27,8 @@ def schedule_job():
     # Récupérer le dernier object de note
     objectInserted = messageListEntity(Marks.find().sort({"_id": -1}).limit(1))
     if objectInserted != []:
-        # Ajouter en base le nouvel object de note
-        Marks.insert_one({"listGrades": objectToInsert, "created_at": datetime.now()})
+        # Ajoute en base le nouvel object de note
+        Marks.insert_one({"list_grades":objectToInsert, "created_at":datetime.now()})
         
         # Calcul de la date limite (1 heure plus tôt que maintenant)
         date_limite = datetime.now() - timedelta(seconds=30)
@@ -36,8 +36,8 @@ def schedule_job():
         # Supprimer tous les documents de plus de 1h
         Marks.delete_many({"created_at": {"$lt": date_limite}})
 
-        # Compare l'object de note récupéré de l'api et celui en base
-        grade_updates = utils.compare_grades(objectInserted[0].get('listGrades'), objectToInsert)
+        # Compare l'object de note recupere de l'api et celui en base
+        grade_updates = utils.compare_grades(objectInserted[0].get('list_grades'), objectToInsert)
         if grade_updates != []:
             mailService.send_marks_email(
                 to='equelenis@myges.fr',
@@ -53,7 +53,7 @@ def schedule_job():
                 grade_updates=exam_updates
             )
     else:
-        Marks.insert_one({"listGrades": objectToInsert, "created_at": datetime.now()})
+        Marks.insert_one({"list_grades":objectToInsert, "created_at":datetime.now()})
 
 # Planifier l'exécution de la fonction toutes les 15 secondes
 schedule.every(5).seconds.do(schedule_job)
